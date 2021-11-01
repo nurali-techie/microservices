@@ -1,0 +1,56 @@
+openapi: 3.0.0
+info:
+  title: Menu Service API
+  version: 1.0.0
+paths:
+  /restaurants{id}:
+    get:
+      description: get restaurants by id
+      parameters: 
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/restaurant'
+        500:
+          description: error response
+  /restaurants:
+    post:
+      description: new restaurant
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/restaurant'
+      responses:
+        201:
+          description: success response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+        500:
+          description: error response
+components:
+  schemas:
+    restaurant:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+        city:
+          type: string

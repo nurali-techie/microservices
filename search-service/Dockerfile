@@ -4,6 +4,7 @@ WORKDIR /service
 
 COPY go.mod go.sum ./
 
+ENV CGO_ENABLED=0
 RUN go mod download
 
 COPY . .
