@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  menu_service:
+    build: ./menu-service/
+    container_name: menu_service
+    hostname: menu_service
+  search_service:
+    build: ./search-service/
+    container_name: search_service
+    hostname: search_service
