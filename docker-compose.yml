@@ -1,6 +1,7 @@
 version: "3.9"
 
 services:
+# microservices
   menu_service:
     build: ./menu-service/
     container_name: menu_service
@@ -20,3 +21,23 @@ services:
     build: ./search-service/
     container_name: search_service
     hostname: search_service
+
+# infra
+  kong:
+    image: kong:2.6.0-alpine
+    container_name: kong
+    hostname: kong
+    environment:
+      KONG_DATABASE: 'off'
+      KONG_PROXY_ACCESS_LOG: '/dev/stdout'
+      KONG_ADMIN_ACCESS_LOG: '/dev/stdout'
+      KONG_PROXY_ERROR_LOG: '/dev/stderr'
+      KONG_ADMIN_ERROR_LOG: '/dev/stderr'
+      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
+      KONG_DECLARATIVE_CONFIG: "/opt/kong/kong.yaml"
+    command: "kong start"
+    ports:
+      - 8000:8000
+      - 8001:8001
+    volumes:
+      - ./kong.yaml:/opt/kong/kong.yaml

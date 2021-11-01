@@ -1,0 +1,11 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: menu_service
+    url: http://menu_service:2011
+    routes:
+      - name: menu-service-routes
+        paths:
+          - /
+        strip_path: true
