@@ -8,7 +8,7 @@ import (
 )
 
 //go:embed database.sql
-var sql string
+var databaseSQL string
 
 var (
 	DB_HOST = "menu_postgres"
@@ -29,5 +29,5 @@ func getDBConfig() *commons.DBConfig {
 }
 
 func getDatabaseSQL() []string {
-	return strings.Split(sql, "\n")
+	return strings.Split(databaseSQL, "\n")
 }
