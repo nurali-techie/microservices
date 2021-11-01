@@ -1,8 +1,6 @@
 # microservices
 
-This is demo / sample / example project of microservices architecture.
-
-This is sort of online food delivery app.
+This is demo / sample / example project using microservices architecture for Online Food Delivery App.
 
 # Architecture
 
