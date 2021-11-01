@@ -3,6 +3,9 @@ package commons_go
 import (
 	"database/sql"
 	"fmt"
+	"strings"
+
+	_ "github.com/lib/pq"
 )
 
 type DBConfig struct {
@@ -20,5 +23,23 @@ func SetupDatabase(config *DBConfig, sqls []string) *sql.DB {
 	if err != nil {
 		panic(err)
 	}
+
+	err = db.Ping()
+	if err != nil {
+		db.Close()
+		panic(err)
+	}
+
+	for _, sql := range sqls {
+		if strings.Trim(sql, " ") == "" {
+			continue
+		}
+		_, err = db.Exec(sql)
+		if err != nil {
+			db.Close()
+			panic(err)
+		}
+	}
+
 	return db
 }
