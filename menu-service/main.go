@@ -18,15 +18,22 @@ func main() {
 
 	// repo
 	restoRepo := NewRestoRepo(db)
+	menuItemRepo := NewMenuItemRepo(db)
 
 	// handler
 	r := mux.NewRouter()
 	r.HandleFunc("/ping", pingHandler)
 
+	// resto handler
 	restoHandler := NewRestoHandler(restoRepo)
 	r.HandleFunc("/v1/restaurants", restoHandler.NewRestoHandler).Methods(http.MethodPost)
 	r.HandleFunc("/v1/restaurants/{id}", restoHandler.GetRestoHandler).Methods(http.MethodGet)
 
+	// menu item handler
+	menuItemHandler := NewMenuItemHandler(menuItemRepo)
+	r.HandleFunc("/v1/menu_items", menuItemHandler.NewMenuItemHandler).Methods(http.MethodPost)
+
+	// start http service
 	log.Info("menu-service started")
 	log.Fatal(http.ListenAndServe("0.0.0.0:2011", r))
 }

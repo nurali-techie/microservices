@@ -7,6 +7,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
+// RestoRepo repo for Restaurant entity
 type RestoRepo struct {
 	db *sql.DB
 }
@@ -52,4 +53,31 @@ func (r *RestoRepo) GetResto(restoID string) (*Restaurant, error) {
 	}
 
 	return nil, fmt.Errorf("restaurant not found '%s'", restoID)
+}
+
+// MenuItemRepo repo for MenuItem entity
+type MenuItemRepo struct {
+	db *sql.DB
+}
+
+func NewMenuItemRepo(db *sql.DB) *MenuItemRepo {
+	return &MenuItemRepo{
+		db: db,
+	}
+}
+
+func (r *MenuItemRepo) CreateMenuItem(menuItem *MenuItem) (string, error) {
+	miID := menuItem.ID
+	if miID == "" {
+		miID = uuid.NewV4().String()
+	}
+
+	stmt, err := r.db.Prepare(`INSERT INTO menu_items (id, name, category, cuisine, price, restaurant_id) values ($1, $2, $3, $4, $5, $6) returning id`)
+	if err != nil {
+		return "", err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(miID, menuItem.Name, menuItem.Category, menuItem.Cuisine, menuItem.Price, menuItem.RestoID)
+	return miID, err
 }

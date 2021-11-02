@@ -13,6 +13,7 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("menu-service OK"))
 }
 
+// RestoHandler handler for Restaurant resource
 type RestoHandler struct {
 	repo *RestoRepo
 }
@@ -60,6 +61,37 @@ func (h *RestoHandler) GetRestoHandler(w http.ResponseWriter, r *http.Request) {
 	err = json.NewEncoder(w).Encode(resto)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error: restaurant to json failed, %v", err), http.StatusInternalServerError)
+		return
+	}
+}
+
+// MenuItemHandler handler for MenuItem resource
+type MenuItemHandler struct {
+	repo *MenuItemRepo
+}
+
+func NewMenuItemHandler(repo *MenuItemRepo) *MenuItemHandler {
+	return &MenuItemHandler{
+		repo: repo,
+	}
+}
+
+func (h *MenuItemHandler) NewMenuItemHandler(w http.ResponseWriter, r *http.Request) {
+	menuItem := &MenuItem{}
+	if err := json.NewDecoder(r.Body).Decode(menuItem); err != nil {
+		http.Error(w, fmt.Sprintf("Error: new menu item json parsing failed, %v", err), http.StatusBadRequest)
+		return
+	}
+
+	id, err := h.repo.CreateMenuItem(menuItem)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error: new menu item insert record failed, %v", err), http.StatusInternalServerError)
+		return
+	}
+
+	err = json.NewEncoder(w).Encode(&IDResponse{id})
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error: menu item created but menu item id to json failed, %v", err), http.StatusInternalServerError)
 		return
 	}
 }
