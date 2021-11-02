@@ -2,13 +2,14 @@ version: "3.9"
 
 services:
 # microservices
+
+## menu_service
   menu_service:
     build: ./menu-service/
     container_name: menu_service
     hostname: menu_service
     depends_on: 
       - menu_postgres
-
   menu_postgres:
     image: postgres:14
     container_name: menu_postgres
@@ -17,12 +18,15 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=menu_database
 
+## search_service
   search_service:
     build: ./search-service/
     container_name: search_service
     hostname: search_service
 
 # infra
+
+## kong
   kong:
     image: kong:2.6.0-alpine
     container_name: kong
@@ -41,3 +45,29 @@ services:
       - 8001:8001
     volumes:
       - ./kong.yaml:/opt/kong/kong.yaml
+
+## kafka
+  kafka:
+    image: confluentinc/cp-kafka:5.2.5
+    container_name: kafka
+    hostname: kafka
+    depends_on:
+      - zookeeper
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  zookeeper:
+    image: confluentinc/cp-zookeeper:5.2.5
+    container_name: zookeeper
+    hostname: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    ports:
+      - 22181:2181

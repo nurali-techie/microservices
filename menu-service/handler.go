@@ -67,12 +67,14 @@ func (h *RestoHandler) GetRestoHandler(w http.ResponseWriter, r *http.Request) {
 
 // MenuItemHandler handler for MenuItem resource
 type MenuItemHandler struct {
-	repo *MenuItemRepo
+	repo      *MenuItemRepo
+	publisher *Publisher
 }
 
-func NewMenuItemHandler(repo *MenuItemRepo) *MenuItemHandler {
+func NewMenuItemHandler(repo *MenuItemRepo, publisher *Publisher) *MenuItemHandler {
 	return &MenuItemHandler{
-		repo: repo,
+		repo:      repo,
+		publisher: publisher,
 	}
 }
 
@@ -86,6 +88,13 @@ func (h *MenuItemHandler) NewMenuItemHandler(w http.ResponseWriter, r *http.Requ
 	id, err := h.repo.CreateMenuItem(menuItem)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Error: new menu item insert record failed, %v", err), http.StatusInternalServerError)
+		return
+	}
+	menuItem.ID = id
+
+	err = h.publisher.PublishMenuItem(menuItem)
+	if err != nil {
+		http.Error(w, fmt.Sprintf("Error: new menu item publish failed, %v", err), http.StatusInternalServerError)
 		return
 	}
 

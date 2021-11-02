@@ -3,6 +3,7 @@ module github.com/nurali-techie/microservices/menu-service
 go 1.17
 
 require (
+	github.com/confluentinc/confluent-kafka-go v1.7.0
 	github.com/gorilla/mux v1.8.0
 	github.com/nurali-techie/microservices/commons-go v0.0.0-20211101123025-3c08f8d1b08b
 	github.com/satori/go.uuid v1.2.0

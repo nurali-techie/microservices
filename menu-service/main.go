@@ -16,6 +16,11 @@ func main() {
 	db := commons.SetupDatabase(getDBConfig(), getDatabaseSQL())
 	defer db.Close()
 
+	// kafka
+	producer := NewKafkaProducer()
+	defer producer.Close()
+	publisher := NewPublisher(producer)
+
 	// repo
 	restoRepo := NewRestoRepo(db)
 	menuItemRepo := NewMenuItemRepo(db)
@@ -30,7 +35,7 @@ func main() {
 	r.HandleFunc("/v1/restaurants/{id}", restoHandler.GetRestoHandler).Methods(http.MethodGet)
 
 	// menu item handler
-	menuItemHandler := NewMenuItemHandler(menuItemRepo)
+	menuItemHandler := NewMenuItemHandler(menuItemRepo, publisher)
 	r.HandleFunc("/v1/menu_items", menuItemHandler.NewMenuItemHandler).Methods(http.MethodPost)
 
 	// start http service

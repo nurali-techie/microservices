@@ -20,3 +20,4 @@ kong - API Gateway
 - Stripe API Docs [link](https://stripe.com/docs/api)
 - Code: kong docker compose [link](https://github.com/Kong/demo-scene/tree/main/kong-docker)
 - Video: kong docker compose setup [link](https://youtu.be/sJEID1xEZMg)
+- Kafka topic naming [link](https://www.xeotek.com/topic-naming-conventions-how-do-i-name-my-topics-5-recommendations-with-examples/)
