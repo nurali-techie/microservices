@@ -8,6 +8,14 @@ import (
 
 func main() {
 	log.Info("starting search-service")
+
+	// kafka
+	consumer := NewConsumer()
+	defer consumer.Close()
+	menuItemSub := NewMenuItemsSubscriber(consumer)
+	menuItemSub.Start()
+
+	// handler
 	http.HandleFunc("/ping", pingHandler)
 
 	log.Info("search-service started")
