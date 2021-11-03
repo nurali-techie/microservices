@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
-	log "github.com/sirupsen/logrus"
 )
 
 var (
@@ -35,8 +34,6 @@ func NewPublisher(producer *kafka.Producer) *Publisher {
 }
 
 func (p *Publisher) PublishMenuItem(menuItem *MenuItem) error {
-	log.Info("publish menuitem, id=%s", menuItem.ID)
-
 	var value bytes.Buffer
 	if err := json.NewEncoder(&value).Encode(menuItem); err != nil {
 		return err
@@ -49,10 +46,5 @@ func (p *Publisher) PublishMenuItem(menuItem *MenuItem) error {
 		Value:          value.Bytes(),
 	}
 
-	err := p.producer.Produce(msg, nil)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return p.producer.Produce(msg, nil)
 }

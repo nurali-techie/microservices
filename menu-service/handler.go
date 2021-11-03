@@ -7,6 +7,7 @@ import (
 
 	"github.com/gorilla/mux"
 	uuid "github.com/satori/go.uuid"
+	log "github.com/sirupsen/logrus"
 )
 
 func pingHandler(w http.ResponseWriter, r *http.Request) {
@@ -42,6 +43,7 @@ func (h *RestoHandler) NewRestoHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("Error: restaurant created but restaurant id to json failed, %v", err), http.StatusInternalServerError)
 		return
 	}
+	log.Infof("restaurant created, id=%s", id)
 }
 
 func (h *RestoHandler) GetRestoHandler(w http.ResponseWriter, r *http.Request) {
@@ -90,6 +92,7 @@ func (h *MenuItemHandler) NewMenuItemHandler(w http.ResponseWriter, r *http.Requ
 		http.Error(w, fmt.Sprintf("Error: new menu item insert record failed, %v", err), http.StatusInternalServerError)
 		return
 	}
+	log.Infof("menuitem created, id=%s", id)
 	menuItem.ID = id
 
 	err = h.publisher.PublishMenuItem(menuItem)
@@ -97,6 +100,7 @@ func (h *MenuItemHandler) NewMenuItemHandler(w http.ResponseWriter, r *http.Requ
 		http.Error(w, fmt.Sprintf("Error: new menu item publish failed, %v", err), http.StatusInternalServerError)
 		return
 	}
+	log.Infof("menuitem published, id=%s", menuItem.ID)
 
 	err = json.NewEncoder(w).Encode(&IDResponse{id})
 	if err != nil {
