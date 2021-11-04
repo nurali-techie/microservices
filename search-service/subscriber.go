@@ -1,6 +1,10 @@
 package main
 
 import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 	log "github.com/sirupsen/logrus"
 )
@@ -27,9 +31,10 @@ func NewConsumer() *kafka.Consumer {
 
 type MenuItemSubscribe struct {
 	consumer *kafka.Consumer
+	esClient *ElasticClient
 }
 
-func NewMenuItemsSubscriber(consumer *kafka.Consumer) *MenuItemSubscribe {
+func NewMenuItemsSubscriber(consumer *kafka.Consumer, esClient *ElasticClient) *MenuItemSubscribe {
 	err := consumer.Subscribe(KAFKA_TOPIC_MENUITEMS, nil)
 	if err != nil {
 		panic(err)
@@ -37,6 +42,7 @@ func NewMenuItemsSubscriber(consumer *kafka.Consumer) *MenuItemSubscribe {
 
 	return &MenuItemSubscribe{
 		consumer: consumer,
+		esClient: esClient,
 	}
 }
 
@@ -48,7 +54,26 @@ func (s *MenuItemSubscribe) Start() {
 				log.Errorf("Error: reading menuitems topics, %v", err)
 				continue
 			}
-			log.Infof("Msg received, topic:%s, offset:%s, key:%s, value:%s", *msg.TopicPartition.Topic, msg.TopicPartition.Offset, string(msg.Key), string(msg.Value))
+			log.Infof("Msg received, topic:%s, offset:%s, key:%s", *msg.TopicPartition.Topic, msg.TopicPartition.Offset, string(msg.Key))
+
+			err = s.insertIntoES(msg.Value)
+			if err != nil {
+				log.Errorf("Error: insert to elasticserach failed, %v", err)
+			}
 		}
 	}()
+}
+
+func (s *MenuItemSubscribe) insertIntoES(content []byte) error {
+	var menuItem MenuItem
+	if err := json.NewDecoder(bytes.NewBuffer(content)).Decode(&menuItem); err != nil {
+		return err
+	}
+
+	log.Infof("menuitem: %v", menuItem)
+	err := s.esClient.InsertMenuItem(&menuItem)
+	if err != nil {
+		return fmt.Errorf("insert to elasticserach failed for menu_item %q, %v", menuItem.ID, err)
+	}
+	return nil
 }

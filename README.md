@@ -9,7 +9,7 @@ This is demo / sample / example project using microservices architecture for Onl
 git clone https://github.com/nurali-techie/microservices.git
 ```
 
-**Step2** - run setup.sh to setu all infra, services using docker-compose
+**Step2** - run setup.sh to setup all infra, services using docker-compose
 ```
 ./setup.sh
 ```
