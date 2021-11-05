@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 
 	"github.com/olivere/elastic/v7"
@@ -76,6 +77,28 @@ func (e *ElasticClient) CreateIndexes() {
 
 func (e *ElasticClient) InsertMenuItem(menuItem *MenuItem) error {
 	indexService := e.client.Index().Index(MENU_ITEM_INDEX_NAME)
-	_, err := indexService.Id(menuItem.ID).BodyJson(menuItem).Do(context.Background())
+	_, err := indexService.Id(menuItem.ID).BodyJson(menuItem.ToMenuItemES()).Do(context.Background())
 	return err
+}
+
+func (e *ElasticClient) SearchMenuItem(name string) ([]*MenuItem, error) {
+	termQuery := elastic.NewTermQuery("name", name)
+	res, err := e.client.Search().Index(MENU_ITEM_INDEX_NAME).Query(termQuery).Do(context.Background())
+	if err != nil || res.Hits == nil {
+		return nil, err
+	}
+
+	menuItems := make([]*MenuItem, 0)
+	for _, esHit := range res.Hits.Hits {
+		var menuItem *MenuItem
+		if esHit.Source != nil {
+			json.Unmarshal(esHit.Source, &menuItem)
+			if err != nil {
+				return nil, err
+			}
+			menuItem.ID = esHit.Id
+			menuItems = append(menuItems, menuItem)
+		}
+	}
+	return menuItems, nil
 }

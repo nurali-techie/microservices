@@ -26,12 +26,9 @@ func main() {
 	// handler
 	log.Info("registering handlers")
 	http.HandleFunc("/ping", pingHandler)
+	http.HandleFunc("/v1/search", SearchHandler(esClient))
 	log.Info("handlers registered")
 
 	log.Info("search-service started")
 	log.Fatal(http.ListenAndServe("0.0.0.0:2021", nil))
-}
-
-func pingHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("search-service OK"))
 }
