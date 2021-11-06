@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/nurali-techie/microservices/commons-go/commons_go/proto";
+option go_package = "github.com/nurali-techie/microservices/commons-go/proto";
 
 package proto;
 
