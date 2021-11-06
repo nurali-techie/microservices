@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+option go_package = "github.com/nurali-techie/microservices/commons-go/commons_go/proto";
+
+package proto;
+
+service MenuService {
+    rpc GetRestaurant(GetRestaurantRequest) returns (GetRestaurantReply) {}
+}
+
+message GetRestaurantRequest {
+    string ID = 1;
+}
+
+message GetRestaurantReply {
+    string ID = 1;
+    string Name = 2;
+    string Address = 3;
+    string City = 4;
+}
