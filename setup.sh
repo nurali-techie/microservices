@@ -15,6 +15,11 @@ docker-compose up -d search_elasticsearch
 echo ">>Info: wait for 10 seconds to start elasticsearch"
 sleep 10
 
+echo ">>Info: starting serach service redis"
+docker-compose up -d search_redis
+echo ">>Info: wait for 5 seconds to start redis"
+sleep 5
+
 if ! docker exec -it kafka kafka-topics --list --bootstrap-server kafka:9092 | grep -q 'menuitems'; then
     echo ">>Info: creating menu servie kafka topics"
     docker exec -it kafka kafka-topics --create --bootstrap-server kafka:9092 --topic menuitems --partitions 1 --replication-factor 1

@@ -15,6 +15,11 @@ func main() {
 	esClient.CreateIndexes()
 	log.Info("elasticsearch indexes created")
 
+	// redis
+	redisClient := NewRedisClient()
+	defer redisClient.Close()
+	cache := NewCache(redisClient)
+
 	// kafka
 	log.Info("creating kafka consumers")
 	consumer := NewConsumer()
@@ -26,7 +31,7 @@ func main() {
 	// handler
 	log.Info("registering handlers")
 	http.HandleFunc("/ping", pingHandler)
-	http.HandleFunc("/v1/search", SearchHandler(esClient))
+	http.HandleFunc("/v1/search", SearchHandler(esClient, cache))
 	log.Info("handlers registered")
 
 	log.Info("search-service started")

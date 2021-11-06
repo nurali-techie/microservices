@@ -19,9 +19,15 @@
             if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
                 var menuItems = JSON.parse(xmlhttp.responseText);
 
-                var table = `<table border="1"><tr><th>id</th><th>name</th><th>category</th><th>cuisine</th><th>price</th><th>restaurant_id</th></tr>`;
+                var table = `<table border="1"><tr><th>id</th><th>name</th><th>category</th><th>cuisine</th><th>price</th><th>restaurant_id</th><th>restaurant_name</th></tr>`;
                 for (i = 0; i < menuItems.length; i++) {
-                    table += "<tr><td>" + menuItems[i].id + "</td><td>" + menuItems[i].name + "</td><td>" + menuItems[i].category + "</td><td>" + menuItems[i].cuisine + "</td><td>" + menuItems[i].price + "</td><td>" + menuItems[i].restaurant_id + "</td></tr>"
+                    table += "<tr><td>" + menuItems[i].id
+                        + "</td><td>" + menuItems[i].name
+                        + "</td><td>" + menuItems[i].category
+                        + "</td><td>" + menuItems[i].cuisine
+                        + "</td><td>" + menuItems[i].price
+                        + "</td><td>" + menuItems[i].restaurant_id
+                        + "</td><td>" + menuItems[i].restaurant_name + "</td></tr>"
                 }
                 table += "</table>"
 

@@ -1,20 +1,32 @@
 package main
 
+type Restaurant struct {
+	ID      string `json:"id"`
+	Name    string `json:"name,omitempty"`
+	Address string `json:"address,omitempty"`
+	City    string `json:"city,omitempty"`
+}
+
 type MenuItem struct {
-	ID       string  `json:"id" db:"id"`
-	Name     string  `json:"name" db:"name"`
-	Category string  `json:"category" db:"category"`
-	Cuisine  string  `json:"cuisine" db:"cuisine"`
-	Price    float64 `json:"price" db:"price"`
-	RestoID  string  `json:"restaurant_id" db:"id"`
+	ID       string  `json:"id"`
+	Name     string  `json:"name"`
+	Category string  `json:"category"`
+	Cuisine  string  `json:"cuisine"`
+	Price    float64 `json:"price"`
+	RestoID  string  `json:"restaurant_id"`
+}
+
+type SearchResult struct {
+	MenuItem
+	RestoName string `json:"restaurant_name"`
 }
 
 type MenuItemES struct {
-	Name     string  `json:"name" db:"name"`
-	Category string  `json:"category" db:"category"`
-	Cuisine  string  `json:"cuisine" db:"cuisine"`
-	Price    float64 `json:"price" db:"price"`
-	RestoID  string  `json:"restaurant_id" db:"id"`
+	Name     string  `json:"name"`
+	Category string  `json:"category"`
+	Cuisine  string  `json:"cuisine"`
+	Price    float64 `json:"price"`
+	RestoID  string  `json:"restaurant_id"`
 }
 
 func (m *MenuItem) ToMenuItemES() *MenuItemES {

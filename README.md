@@ -24,6 +24,8 @@ menu-service - manages restaurant and menu entity
 
 search-service - manages search query
 
+customer-webui - customer webui frontend
+
 ## Infra
 
 kong - API Gateway
@@ -39,3 +41,4 @@ kafka - async communication between services
 - Kafka topic naming [link](https://www.xeotek.com/topic-naming-conventions-how-do-i-name-my-topics-5-recommendations-with-examples/)
 - Video: Event-driven Architectures on Apache Kafka with Spring Boot [link](https://youtu.be/xyaFygU9C2Q)
 - Video: Consuming REST Web Service in an HTML Page [link](https://youtu.be/KjNXOi4Wqbk)
+- Getting Started with Redis and Go - Tutorial [link](https://tutorialedge.net/golang/go-redis-tutorial/)
