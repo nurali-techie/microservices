@@ -28,6 +28,8 @@ search-service - manages search query
 
 kong - API Gateway
 
+kafka - async communication between services
+
 # References
 
 - REST API Design [link](https://www.mscharhag.com/p/rest-api-design)
@@ -36,3 +38,4 @@ kong - API Gateway
 - Video: kong docker compose setup [link](https://youtu.be/sJEID1xEZMg)
 - Kafka topic naming [link](https://www.xeotek.com/topic-naming-conventions-how-do-i-name-my-topics-5-recommendations-with-examples/)
 - Video: Event-driven Architectures on Apache Kafka with Spring Boot [link](https://youtu.be/xyaFygU9C2Q)
+- Video: Consuming REST Web Service in an HTML Page [link](https://youtu.be/KjNXOi4Wqbk)
