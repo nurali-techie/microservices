@@ -14,8 +14,6 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 
 func SearchHandler(esClient *ElasticClient) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-
 		name := r.URL.Query().Get("name")
 		log.Infof("search called with name %q", name)
 

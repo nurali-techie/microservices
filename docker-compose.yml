@@ -32,6 +32,16 @@ services:
     environment:
       discovery.type: single-node
 
+
+# ui
+
+## customer-webui
+  customer_webui:
+    build: ./customer-webui/
+    container_name: customer_webui
+    hostname: customer_webui
+
+
 # infra
 
 ## kong

@@ -2,10 +2,26 @@ _format_version: "2.1"
 _transform: true
 
 services:
+  - name: customer_webui
+    url: http://customer_webui:2000
+    routes:
+      - name: customer-webui-routes
+        paths:
+          - /
+        strip_path: true
+
   - name: menu_service
     url: http://menu_service:2011
     routes:
       - name: menu-service-routes
         paths:
-          - /
+          - /menuapi
+        strip_path: true
+
+  - name: search_service
+    url: http://search_service:2021
+    routes:
+      - name: search-service-routes
+        paths:
+          - /searchapi
         strip_path: true

@@ -15,3 +15,5 @@ function onRequest(request, response) {
 }
 
 http.createServer(onRequest).listen(2000);
+
+console.log(`Running on http://localhost:2000`);
