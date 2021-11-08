@@ -25,6 +25,10 @@ func main() {
 	restoRepo := NewRestoRepo(db)
 	menuItemRepo := NewMenuItemRepo(db)
 
+	// grpc
+	menuServiceServer := NewMenuServiceServer(restoRepo)
+	menuServiceServer.Start()
+
 	// handler
 	r := mux.NewRouter()
 	r.HandleFunc("/ping", pingHandler)
