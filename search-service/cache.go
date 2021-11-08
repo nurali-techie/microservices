@@ -36,7 +36,7 @@ func NewCache(client *redis.Client) *Cache {
 }
 
 func (c *Cache) GetRestaurant(restoID string) (*Restaurant, error) {
-	restoVal, err := c.client.Get(restoID).Result()
+	restoVal, err := c.client.Get(fmtRestoID(restoID)).Result()
 	if err != nil {
 		return nil, err
 	}
@@ -53,9 +53,11 @@ func (c *Cache) SetRestaurant(resto *Restaurant) error {
 	if err != nil {
 		return nil
 	}
-	expiry := endOfDay()
-	fmt.Println(expiry)
-	return c.client.Set(resto.ID, restoVal, endOfDay()).Err()
+	return c.client.Set(fmtRestoID(resto.ID), restoVal, endOfDay()).Err()
+}
+
+func fmtRestoID(restoID string) string {
+	return fmt.Sprintf("r:%s", restoID)
 }
 
 func endOfDay() time.Duration {

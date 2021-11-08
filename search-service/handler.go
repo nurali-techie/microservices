@@ -12,7 +12,7 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("search-service OK"))
 }
 
-func SearchHandler(esClient *ElasticClient, cache *Cache) http.HandlerFunc {
+func SearchHandler(esClient *ElasticClient, cache *Cache, menuService *MenuService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		name := r.URL.Query().Get("name")
 		log.Infof("search called with name %q", name)
@@ -30,8 +30,11 @@ func SearchHandler(esClient *ElasticClient, cache *Cache) http.HandlerFunc {
 				log.Errorf("cache get failed for restaurant, id %q, %v", menuItem.RestoID, err)
 			}
 			if resto == nil {
-				// TODO VN: get resto from menu service using gRPC call
-				resto = GetRestaurant(menuItem.RestoID)
+				resto, err = menuService.GetRestaurant(menuItem.RestoID)
+				if err != nil {
+					log.Errorf("grpc call failed for restaurant, id %q, %v", menuItem.RestoID, err)
+					continue
+				}
 				err = cache.SetRestaurant(resto)
 				if err != nil {
 					log.Errorf("cache set failed for restaurnat, id %q, %v", menuItem.RestoID, err)
@@ -48,12 +51,5 @@ func SearchHandler(esClient *ElasticClient, cache *Cache) http.HandlerFunc {
 			http.Error(w, fmt.Sprintf("Error: search result to json failed, %v", err), http.StatusInternalServerError)
 			return
 		}
-	}
-}
-
-func GetRestaurant(restoID string) *Restaurant {
-	return &Restaurant{
-		ID:   restoID,
-		Name: fmt.Sprintf("name-%s", restoID),
 	}
 }

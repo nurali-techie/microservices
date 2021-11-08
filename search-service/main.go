@@ -20,6 +20,11 @@ func main() {
 	defer redisClient.Close()
 	cache := NewCache(redisClient)
 
+	// grpc
+	menuClient := NewMenuClient()
+	defer NewMenuClient().Close()
+	menuService := NewMenuService(menuClient)
+
 	// kafka
 	log.Info("creating kafka consumers")
 	consumer := NewConsumer()
@@ -31,7 +36,7 @@ func main() {
 	// handler
 	log.Info("registering handlers")
 	http.HandleFunc("/ping", pingHandler)
-	http.HandleFunc("/v1/search", SearchHandler(esClient, cache))
+	http.HandleFunc("/v1/search", SearchHandler(esClient, cache, menuService))
 	log.Info("handlers registered")
 
 	log.Info("search-service started")
