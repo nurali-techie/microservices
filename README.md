@@ -19,18 +19,23 @@ Use `docker-compose down` to remove all.
 # Architecture
 
 ## Services
-
-menu-service - manages restaurant and menu entity
-
-search-service - manages search query
-
-customer-webui - customer webui frontend
+- menu-service - manages restaurant and menu entity
+- search-service - manages search query
+- customer-webui - customer webui frontend
 
 ## Infra
+- kong - API Gateway
+- kafka - async communication between services
 
-kong - API Gateway
+![components](components.png)
 
-kafka - async communication between services
+## Flows
+- create restaurant using menu_service
+- create menu items using menu_service
+- open customer webui home page
+- search menu item from search page
+
+![flows](flows.png)
 
 # References
 
